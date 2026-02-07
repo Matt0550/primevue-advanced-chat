@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Matt0550/better-better-vue-advanced-chat/actions/workflows/npm-publish.yml"><img src="https://img.shields.io/github/actions/workflow/status/advanced-chat/better-vue-advanced-chat/npm-publish.yml?branch=main"></a>
+  <a href="https://github.com/Matt0550/better-vue-advanced-chat/actions/workflows/npm-publish.yml"><img src="https://img.shields.io/github/actions/workflow/status/advanced-chat/better-vue-advanced-chat/npm-publish.yml?branch=main"></a>
   <a href="https://www.npmjs.com/package/better-vue-advanced-chat"><img src="https://img.shields.io/npm/dm/better-vue-advanced-chat.svg"></a>
   <a href="https://www.npmjs.com/package/better-vue-advanced-chat"><img src="https://img.shields.io/bundlephobia/minzip/better-vue-advanced-chat"></a>
   <a href="https://www.npmjs.com/package/better-vue-advanced-chat"><img src="https://img.shields.io/npm/v/better-vue-advanced-chat.svg"></a>
@@ -100,15 +100,15 @@ compilerOptions: {
 }
 ```
 
-Demo: https://github.com/Matt0550/better-better-vue-advanced-chat-sandbox/tree/main
+Demo: https://github.com/Matt0550/better-vue-advanced-chat-sandbox/tree/main
 
 ### React
 
-Demo: https://github.com/Matt0550/better-better-vue-advanced-chat-sandbox/tree/react
+Demo: https://github.com/Matt0550/better-vue-advanced-chat-sandbox/tree/react
 
 ### Angular / Ionic
 
-Demo: https://github.com/Matt0550/better-better-vue-advanced-chat-sandbox/tree/angular
+Demo: https://github.com/Matt0550/better-vue-advanced-chat-sandbox/tree/angular
 
 <br>
 
@@ -928,7 +928,7 @@ You can find the source code to implement a full-featured chat app using Firebas
 To test it using your own Firebase project:
 
 - Setup Cloud Firestore (to store users and rooms) and Realtime Database (to store users online status)
-- Clone this repository: `git clone https://github.com/Matt0550/better-better-vue-advanced-chat.git`
+- Clone this repository: `git clone https://github.com/Matt0550/better-vue-advanced-chat.git`
 - Inside `demo/firebase/src/database/index.js` file, replace the line `const config = ...` by your own Firebase config
 - Go inside `demo/firebase` folder and run `npm run serve`
 
@@ -989,7 +989,7 @@ messages: {
 
 <br>
 
-## [Contributing](https://github.com/Matt0550/better-better-vue-advanced-chat/blob/master/.github/CONTRIBUTING.md)
+## [Contributing](https://github.com/Matt0550/better-vue-advanced-chat/blob/master/.github/CONTRIBUTING.md)
 
 Your help is always appreciated :rocket:
 
