@@ -26,7 +26,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Matt0550/better-vue-advanced-chat.git"
+		"url": "https://github.com/Matt0550/better-vue-advanced-chat"
 	},
 	"bugs": {
 		"url": "https://github.com/Matt0550/better-vue-advanced-chat/issues"
