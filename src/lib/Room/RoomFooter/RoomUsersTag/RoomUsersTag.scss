@@ -4,6 +4,15 @@
 	align-items: center;
 	width: 100%;
 
+	/* don't let the list grow to full viewport height; allow vertical scrolling */
+	max-height: 40vh;
+	overflow-y: auto;
+	min-height: 0;
+
+	/* prevent horizontal overflow caused by right padding */
+	box-sizing: border-box;
+	overflow-x: hidden;
+
 	.vac-tags-box {
 		display: flex;
 		width: 100%;
@@ -12,6 +21,7 @@
 		cursor: pointer;
 		background: var(--chat-footer-bg-color-tag);
 		transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+		flex: 0 0 auto;
 	}
 
 	.vac-tags-box-active {
@@ -43,6 +53,11 @@
 
 		.vac-tags-info {
 			padding: 0 12px;
+		}
+
+		.vac-tags-container {
+			/* allow slightly more vertical space on small screens */
+			max-height: 50vh;
 		}
 	}
 }
