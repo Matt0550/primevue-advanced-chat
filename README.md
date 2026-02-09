@@ -32,6 +32,10 @@
 
 ## New fork features
 - Custom actions with multiple triggers and tagging
+- Hide delete and update message options with `canBeDeleted` and `canBeEdited` message properties
+- Scroll to original message (if in the current view) when clicking on a reply message
+- Now when a replied message is deleted, the reply message will still be displayed but with a "message deleted" text and without the possibility to click on it to scroll to the original message
+- UI improvements
 
 ## [Demo](https://advanced-chat.github.io/better-vue-advanced-chat)
 

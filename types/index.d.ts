@@ -85,10 +85,12 @@ export interface Message {
 	distributed?: boolean
 	seen?: boolean
 	deleted?: boolean
-  edited?: boolean
+	edited?: boolean
 	failure?: boolean
 	disableActions?: boolean
 	disableReactions?: boolean
+	canBeDeleted?: boolean
+	canBeEdited?: boolean
 	files?: MessageFile[]
 	reactions?: MessageReactions
 	replyMessage?: Message
@@ -154,9 +156,9 @@ export interface Props {
 	'messages-loaded'?: boolean
 	'room-actions'?: CustomAction[]
 	'menu-actions'?: CustomAction[]
-	'message-actions'?: MessageActions
+	'message-actions'?: MessageAction []
 	'message-selection-actions'?: CustomAction[]
-	'templates-text'?: TemplatesText
+	'templates-text'?: TemplateText[]
 	'custom-actions'?: CustomActionGroup[]
 	'auto-scroll'?: AutoScroll
 	'show-search'?: boolean

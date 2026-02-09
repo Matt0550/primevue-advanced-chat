@@ -149,9 +149,23 @@ export default {
 			)
 		},
 		filteredMessageActions() {
-			return this.message.senderId === this.currentUserId
-				? this.messageActions
-				: this.messageActions.filter(message => !message.onlyMe)
+			const base =
+				this.message.senderId === this.currentUserId
+					? this.messageActions
+					: this.messageActions.filter(message => !message.onlyMe)
+
+			// apply message-level flags: canBeDeleted and canBeUpdated
+			return base.filter(action => {
+				if (action.name === 'deleteMessage') {
+					// hide delete if explicitly false
+					return this.message.canBeDeleted !== false
+				}
+				if (action.name === 'editMessage') {
+					// hide edit if explicitly false
+					return this.message.canBeEdited !== false
+				}
+				return true
+			})
 		}
 	},
 

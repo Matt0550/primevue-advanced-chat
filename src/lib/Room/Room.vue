@@ -102,6 +102,7 @@
 								@send-message-reaction="sendMessageReaction"
 								@select-message="selectMessage"
 								@unselect-message="unselectMessage"
+								@scroll-to="onScrollToMessage"
 							>
 								<template v-for="(idx, name) in $slots" #[name]="data">
 									<slot :name="name" v-bind="data" />
@@ -546,6 +547,30 @@ export default {
 			})
 			this.resetMessageSelection()
 		},
+			onScrollToMessage(id) {
+				const container = this.$refs.scrollContainer
+				if (!container) return
+				const el = container.querySelector(`[data-message-id="${id}"]`) || document.querySelector(`[data-message-id="${id}"]`) || document.getElementById(id)
+				if (!el) return
+				// scroll container so element is centered
+				const containerRect = container.getBoundingClientRect()
+				const elRect = el.getBoundingClientRect()
+				const offset = elRect.top - containerRect.top - container.clientHeight / 2 + elRect.height / 2
+				// enable smooth scroll via CSS fallback
+				container.classList.add('vac-scroll-smooth')
+				container.scrollBy({ top: offset })
+				setTimeout(() => container.classList.remove('vac-scroll-smooth'), 600)
+				const card = el.querySelector('.vac-message-card') || el
+				if (card) {
+					card.classList.add('vac-message-scroll-highlight')
+				}
+				// also add scroll-highlight to wrapper element as fallback
+				el.classList.add('vac-message-scroll-highlight')
+				setTimeout(() => {
+					if (card) card.classList.remove('vac-message-scroll-highlight')
+					el.classList.remove('vac-message-scroll-highlight')
+				}, 1800)
+			},
 		sendMessageReaction(messageReaction) {
 			this.$emit('send-message-reaction', messageReaction)
 		},

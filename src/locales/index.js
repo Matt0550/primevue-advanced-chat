@@ -2,6 +2,7 @@ export default {
 	ROOMS_EMPTY: 'No rooms',
 	ROOM_EMPTY: 'No room selected',
 	NEW_MESSAGES: 'New Messages',
+	YOU: 'You',
 	MESSAGE_DELETED: 'This message was deleted',
 	MESSAGES_EMPTY: 'No messages',
 	CONVERSATION_STARTED: 'Conversation started on:',

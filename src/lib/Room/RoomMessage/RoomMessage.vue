@@ -1,5 +1,5 @@
 <template>
-	<div :id="message._id" ref="message" class="vac-message-wrapper">
+	<div :id="message._id" ref="message" class="vac-message-wrapper" :data-message-id="message._id">
 		<div v-if="showDate" class="vac-card-info vac-card-date">
 			{{ message.date }}
 		</div>
@@ -70,7 +70,7 @@
 							v-if="showUsername"
 							class="vac-text-username"
 							:class="{
-								'vac-username-reply': !message.deleted && message.replyMessage
+								'vac-username-reply': !message.deleted && message.replyMessage && !messages.find(m => m._id === message.replyMessage._id)?.deleted
 							}"
 						>
 							<span>{{ message.username }}</span>
@@ -80,8 +80,12 @@
 							v-if="!message.deleted && message.replyMessage"
 							:message="message"
 							:room-users="roomUsers"
+							:messages="messages"
+							:current-user-id="currentUserId"
+							:text-messages="textMessages"
 							:text-formatting="textFormatting"
 							:link-options="linkOptions"
+							@scroll-to="$emit('scroll-to', $event)"
 						>
 							<template v-for="(i, name) in $slots" #[name]="data">
 								<slot :name="name" v-bind="data" />

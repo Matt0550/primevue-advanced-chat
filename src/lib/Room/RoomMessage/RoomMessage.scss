@@ -140,6 +140,26 @@
 			0 1px 2px -1px rgba(0, 0, 0, 0.11), 0 1px 5px -1px rgba(0, 0, 0, 0.11);
 	}
 
+	.vac-message-scroll-highlight {
+		/* visible highlight only for programmatic scroll */
+		animation: vac-highlight 1.8s ease-out;
+		background-color: rgba(255, 235, 59, 0.14) !important;
+		border: 2px solid rgba(255, 193, 7, 0.9);
+		transition: background-color 0.4s ease, border 0.4s ease;
+	}
+
+	@keyframes vac-highlight {
+		0% {
+			background-color: rgba(255, 235, 59, 0.28);
+		}
+		60% {
+			background-color: rgba(255, 235, 59, 0.12);
+		}
+		100% {
+			background-color: transparent;
+		}
+	}
+
 	.vac-message-current {
 		background-color: var(--chat-message-bg-color-me) !important;
 	}
