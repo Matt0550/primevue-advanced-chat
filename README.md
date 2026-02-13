@@ -32,6 +32,7 @@
 
 ## New fork features
 - Custom actions with multiple triggers and tagging
+- Markdown formatting toolbar when selecting text in the message input
 - New prop to disable pasting files/images into the room textarea
 - New prop to enable multi-user chat with specific UI improvements (for example, show usernames instead of online status when there are multiple users in the room)
 - Fixed link options to disable url links in messages, or change urls target
@@ -242,8 +243,9 @@ Otherwise, you need to pass those props as strings. For example: `[messages]="JS
 | `show-footer`(17)                   | Boolean          | -        | `true`                                                                                                            |
 | `text-messages`(18)                 | [String, Object] | -        | `null`                                                                                                            |
 | `text-formatting`(19)               | [String, Object] | -        | ` {disabled: false, italic: '_', bold: '*', strike: '~', underline: '°', multilineCode: '```', inlineCode: ' `'}` |
-| `link-options`(20)                  | [String, Object] | -        | `{ disabled: false, target: '_blank', rel: null }`                                                                |
-| `room-info-enabled` (21)            | Boolean          | -        | `false`                                                                                                           |
+| `formatting-toolbar-enabled`        | Boolean          | -        | `true`                                                                                                            |
+| `link-options`(21)                  | [String, Object] | -        | `{ disabled: false, target: '_blank', rel: null }`                                                                |
+| `room-info-enabled` (22)            | Boolean          | -        | `false`                                                                                                           |
 | `textarea-action-enabled`(22)       | Boolean          | -        | `false`                                                                                                           |
 | `textarea-auto-focus`               | Boolean          | -        | `true`                                                                                                            |
 | `user-tags-enabled`                 | Boolean          | -        | `true`                                                                                                            |
@@ -430,6 +432,10 @@ text-messages="{
 - You can change markdown characters, for example: `:text-formatting="{italic: '^'}"`
 - You can disable a specific markdown character, for example: `:text-formatting="{bold: null}"`
 
+**Formatting Toolbar**
+
+When text is selected in the message input area, a formatting toolbar appears above the selection, providing quick access to apply bold, italic, strikethrough, underline, inline code, and multiline code formatting. The toolbar is positioned dynamically above the selected text for optimal usability.
+
 | Style             | Syntax          | Example                                | Output                                 |
 | ----------------- | --------------- | -------------------------------------- | -------------------------------------- |
 | Bold              | `* *`           | `*This is bold text*`                  | **This is bold text**                  |
@@ -455,43 +461,45 @@ This is
 multiline code
 ```
 
-**(20)** `link-options` can be used to disable url links in messages, or change urls target. Ex:
+**(20)** `formatting-toolbar-enabled` can be used to enable or disable the formatting toolbar that appears when text is selected in the message input. Default is `true`.
+
+**(21)** `link-options` can be used to disable url links in messages, or change urls target. Ex:
 
 ```javascript
 :link-options="{ disabled: true, target: '_self', rel: null }"
 ```
 
-**(21)** `room-info-enabled` can be used to trigger an event after clicking the room header component.<br>
+**(22)** `room-info-enabled` can be used to trigger an event after clicking the room header component.<br>
 You can then use the [room-info](#events-api) event to call your own action after clicking the header.
 
-**(22)** `textarea-action-enabled` can be used to add an extra icon on the right of the textarea<br>
+**(23)** `textarea-action-enabled` can be used to add an extra icon on the right of the textarea<br>
 You can then use the [textarea-action-handler](#events-api) event to call your own action after clicking the icon.
 
 **(23)** `responsive-breakpoint` can be used to collapse the rooms list on the left when then viewport size goes below the specified width.
 
 **(24)** `single-room` can be used if you never want to show the rooms list on the left. You still need to pass the `rooms` prop as an array with a single element.
 
-**(33)** `multi-user` can be set to `true` to enable multi-user/group UI: the room header shows a members list (instead of single-user "is online" status) and the rooms list will not show the green online dot for that room. Default: `false`.
+**(25)** `multi-user` can be set to `true` to enable multi-user/group UI: the room header shows a members list (instead of single-user "is online" status) and the rooms list will not show the green online dot for that room. Default: `false`.
 
-**(25)** `scroll-distance` can be used to change the number of pixels before `fetchMessages` event is triggered when scrolling up to load more messages, or `fetchMoreRooms` event is triggered when scrolling down to load more rooms.
+**(26)** `scroll-distance` can be used to change the number of pixels before `fetchMessages` event is triggered when scrolling up to load more messages, or `fetchMoreRooms` event is triggered when scrolling down to load more rooms.
 
-**(26)** `theme` can be used to change the chat theme. Currently, only `light` and `dark` are available.
+**(27)** `theme` can be used to change the chat theme. Currently, only `light` and `dark` are available.
 
-**(27)** `accepted-files` can be used to set specifics file types allowed in chat. By default, all file types are allowed: `"*"`.
+**(28)** `accepted-files` can be used to set specifics file types allowed in chat. By default, all file types are allowed: `"*"`.
 
 Example: set `accepted-files="image/png, image/jpeg, application/pdf"` to allow `JPG` `PNG` and `PDF` files only
 
-**(28)** `capture-files` can be used to enable direct capturing of photos and videos on mobile browsers, as opposed to just uploading existing photos and videos which are already on the device. See [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture) for more information and recognized values. By default, the attribute is omitted and mobile browsers will only offer the gallery to choose photos and videos. Note: this only affects file attachments. Audio messages are always recorded using the device's microphone.
+**(29)** `capture-files` can be used to enable direct capturing of photos and videos on mobile browsers, as opposed to just uploading existing photos and videos which are already on the device. See [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture) for more information and recognized values. By default, the attribute is omitted and mobile browsers will only offer the gallery to choose photos and videos. Note: this only affects file attachments. Audio messages are always recorded using the device's microphone.
 
-**(28a)** `paste-files-enabled` can be used to enable or disable pasting files/images into the room textarea. When set to `false`, pasted images or files will be ignored and not added to the attachments list. Default is `true`.
+**(30)** `paste-files-enabled` can be used to enable or disable pasting files/images into the room textarea. When set to `false`, pasted images or files will be ignored and not added to the attachments list. Default is `true`.
 
-**(29)** `multiple-files` can be used to define whether multiple file selections will be accepted. By default this is true.
+**(31)** `multiple-files` can be used to define whether multiple file selections will be accepted. By default this is true.
 
-**(30)** `styles` can be used to customize your own theme. You can find the full list [here](src/themes/index.js)
+**(32)** `styles` can be used to customize your own theme. You can find the full list [here](src/themes/index.js)
 
-**(31)** `show-audio` can be used to enable or disable audio icon 
+**(33)** `show-audio` can be used to enable or disable audio icon 
 
-**(32)** `custom-actions` can be used to add custom text triggers (like commands or other entities).
+**(34)** `custom-actions` can be used to add custom text triggers (like commands or other entities).
 Ex:
 
 ```javascript

@@ -153,6 +153,8 @@ export interface Props {
 	messages: Message[]
 	'room-message'?: string
 	'username-options'?: UsernameOptions
+	'emoji-data-source'?: string
+	'multi-user'?: boolean
 	'messages-loaded'?: boolean
 	'room-actions'?: CustomAction[]
 	'menu-actions'?: CustomAction[]
@@ -161,6 +163,7 @@ export interface Props {
 	'templates-text'?: TemplateText[]
 	'custom-actions'?: CustomActionGroup[]
 	'auto-scroll'?: AutoScroll
+	'custom-search-room-enabled'?: boolean
 	'show-search'?: boolean
 	'show-add-room'?: boolean
 	'show-send-icon'?: boolean
@@ -174,6 +177,7 @@ export interface Props {
 	'show-footer'?: boolean
 	'text-messages'?: Record<string, StringNumber>
 	'text-formatting'?: TextFormatting
+	'formatting-toolbar-enabled'?: boolean
 	'link-options'?: LinkOptions
 	'room-info-enabled': boolean
 	'textarea-action-enabled'?: boolean

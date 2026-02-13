@@ -96,6 +96,20 @@
 				</div>
 			</div>
 
+			<!-- formatting toolbar (appears when user selects text) -->
+			<div
+				v-if="showFormattingToolbar"
+				class="vac-format-toolbar"
+				:style="{ left: toolbarLeft !== null ? toolbarLeft + 'px' : 'auto', top: toolbarTop !== null ? toolbarTop + 'px' : 'auto' }"
+			>
+				<button class="vac-format-btn" title="Bold" @click.prevent="applyFormatting('bold')"><b>B</b></button>
+				<button class="vac-format-btn" title="Italic" @click.prevent="applyFormatting('italic')"><i>I</i></button>
+				<button class="vac-format-btn" title="Strikethrough" @click.prevent="applyFormatting('strike')"><s>S</s></button>
+				<button class="vac-format-btn" title="Underline" @click.prevent="applyFormatting('underline')"><u>U</u></button>
+				<button class="vac-format-btn" title="Inline code" @click.prevent="applyFormatting('inlineCode')"><code>code</code></button>
+				<button class="vac-format-btn" title="Code block" @click.prevent="applyFormatting('multilineCode')">&#123;&#125;</button>
+			</div>
+
 			<textarea
 				id="roomTextarea"
 				ref="roomTextarea"
@@ -237,6 +251,7 @@ export default {
 		roomId: { type: [String, Number], required: true },
 		roomMessage: { type: String, default: null },
 		textFormatting: { type: Object, required: true },
+		formattingToolbarEnabled: { type: Boolean, default: true },
 		linkOptions: { type: Object, required: true },
 		textMessages: { type: Object, required: true },
 		showSendIcon: { type: Boolean, required: true },
@@ -298,7 +313,12 @@ export default {
 			filteredCustomActions: [],
 			activeCustomActionConfig: null,
 			recorder: this.initRecorder(),
-			isRecording: false
+			isRecording: false,
+				showFormattingToolbar: false,
+			toolbarLeft: null,
+			toolbarTop: null,
+				selectionStart: null,
+				selectionEnd: null
 		}
 	},
 
@@ -325,6 +345,13 @@ export default {
 	},
 
 	watch: {
+		showFormattingToolbar(val) {
+			if (!val) {
+				this.toolbarLeft = null
+				this.toolbarTop = null
+			}
+		},
+
 		roomId() {
 			this.resetMessage(true, true)
 
@@ -388,14 +415,17 @@ export default {
 			}, 60)
 		})
 
-		this.getTextareaRef().addEventListener('click', () => {
-			if (isMobile) this.keepKeyboardOpen = true
+		// selection detection for formatting toolbar
+		this.getTextareaRef().addEventListener('mouseup', this.checkSelection)
+		this.getTextareaRef().addEventListener('keyup', this.checkSelection)
+		this.getTextareaRef().addEventListener('select', this.checkSelection)
+			this.getTextareaRef().addEventListener('touchend', this.checkSelection)
 			this.updateFooterLists()
-		})
-
+		
 		this.getTextareaRef().addEventListener('blur', () => {
 			setTimeout(() => {
 				this.resetFooterList()
+				this.showFormattingToolbar = false
 			}, 100)
 
 			if (isMobile) setTimeout(() => (this.keepKeyboardOpen = false))
@@ -404,12 +434,137 @@ export default {
 
 	beforeUnmount() {
 		this.stopRecorder()
+		const el = this.getTextareaRef()
+		if (el) {
+			el.removeEventListener('mouseup', this.checkSelection)
+			el.removeEventListener('keyup', this.checkSelection)
+			el.removeEventListener('select', this.checkSelection)
+			el.removeEventListener('touchend', this.checkSelection)
+		}
 	},
 
 	methods: {
 		getTextareaRef() {
 			return this.$refs.roomTextarea
 		},
+
+		// detect text selection inside the textarea and show/hide the formatting toolbar
+		checkSelection() {
+			if (!this.formattingToolbarEnabled) {
+				this.showFormattingToolbar = false
+				return
+			}
+
+			const el = this.getTextareaRef()
+			if (!el) {
+				this.showFormattingToolbar = false
+				return
+			}
+
+			const start = el.selectionStart
+			const end = el.selectionEnd
+			if (start == null || end == null || start === end) {
+				this.showFormattingToolbar = false
+				return
+			}
+
+			// do not show the toolbar when suggestion lists are open
+			if (
+				this.filteredEmojis.length ||
+				this.filteredUsersTag.length ||
+				this.filteredTemplatesText.length ||
+				this.filteredCustomActions.length
+			) {
+				this.showFormattingToolbar = false
+				return
+			}
+
+			this.selectionStart = start
+			this.selectionEnd = end
+			this.showFormattingToolbar = true
+
+			// compute toolbar position above the selected text using a hidden mirror element
+			this.$nextTick(() => {
+				try {
+					const startRect = this._getTextareaMarkerRect(this.getTextareaRef(), this.selectionStart)
+					const endRect = this._getTextareaMarkerRect(this.getTextareaRef(), this.selectionEnd)
+					const markerRect = { left: Math.round((startRect.left + endRect.left) / 2), top: startRect.top, bottom: endRect.bottom }
+					const footerRect = this.$el.querySelector('.vac-box-footer').getBoundingClientRect()
+					const toolbarEl = this.$el.querySelector('.vac-format-toolbar')
+					const toolbarRect = toolbarEl ? toolbarEl.getBoundingClientRect() : { width: 200, height: 36 }
+
+					let left = markerRect.left - footerRect.left - Math.round(toolbarRect.width / 2)
+					left = Math.max(8, Math.min(left, footerRect.width - toolbarRect.width - 8))
+
+					// Always position above the footer
+					let top = - (toolbarRect.height + 8)
+
+					this.toolbarLeft = left
+					this.toolbarTop = top
+				} catch (e) {
+					this.toolbarLeft = null
+					this.toolbarTop = null
+				}
+			})
+		},
+
+		applyFormatting(type) {
+			const el = this.getTextareaRef()
+			if (!el) return
+			const start = this.selectionStart != null ? this.selectionStart : el.selectionStart
+			const end = this.selectionEnd != null ? this.selectionEnd : el.selectionEnd
+			if (start == null || end == null || start >= end) return
+
+			const fmt = this.textFormatting || {}
+			const markers = {
+				bold: fmt.bold ?? '*',
+				italic: fmt.italic ?? '_',
+				strike: fmt.strike ?? '~',
+				underline: fmt.underline ?? '°',
+				inlineCode: fmt.inlineCode ?? '`',
+				multilineCode: fmt.multilineCode ?? '```'
+			}
+
+			let selected = this.message.substring(start, end)
+			let replacement = selected
+
+			if (type === 'multilineCode') {
+				replacement = `${markers[type]}\n${selected}\n${markers[type]}`
+			} else {
+				replacement = `${markers[type]}${selected}${markers[type]}`
+			}
+
+			this.message = this.message.slice(0, start) + replacement + this.message.slice(end)
+			this.cursorRangePosition = start + replacement.length
+			this.focusTextarea()
+			this.showFormattingToolbar = false
+			this.selectionStart = null
+			this.selectionEnd = null
+		},
+		_getTextareaMarkerRect(el, position) {
+			// create a hidden mirror div to compute caret/marker position for textarea
+			const div = document.createElement('div')
+			const style = window.getComputedStyle(el)
+			div.style.position = 'absolute'
+			div.style.visibility = 'hidden'
+			div.style.whiteSpace = 'pre-wrap'
+			div.style.wordWrap = 'break-word'
+			div.style.boxSizing = 'border-box'
+			div.style.width = el.clientWidth + 'px'
+			div.style.font = style.font || `${style.fontSize} ${style.fontFamily}`
+			div.style.padding = style.padding
+			div.style.border = '0'
+			div.textContent = el.value.substring(0, position)
+
+			const marker = document.createElement('span')
+			marker.textContent = '\u200b'
+			div.appendChild(marker)
+			document.body.appendChild(div)
+			const rect = marker.getBoundingClientRect()
+			document.body.removeChild(div)
+			return rect
+		},
+
 		focusTextarea(disableMobileFocus) {
 			if (detectMobile() && disableMobileFocus) return
 			if (!this.getTextareaRef()) return
@@ -448,6 +603,7 @@ export default {
 			el.style.height = el.scrollHeight - padding * 2 + 'px'
 		},
 		escapeTextarea() {
+			this.showFormattingToolbar = false
 			if (this.filteredEmojis.length) this.filteredEmojis = []
 			else if (this.filteredUsersTag.length) this.filteredUsersTag = []
 			else if (this.filteredTemplatesText.length) {
@@ -455,6 +611,7 @@ export default {
 			} else if (this.filteredCustomActions.length) {
 				this.filteredCustomActions = []
 			} else this.resetMessage()
+		
 		},
 		onPasteImage(pasteEvent) {
 			const items = pasteEvent.clipboardData?.items

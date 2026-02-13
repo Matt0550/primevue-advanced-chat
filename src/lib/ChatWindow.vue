@@ -55,6 +55,7 @@
 				:single-room="singleRoomCasted"
 				:show-rooms-list="showRoomsList && roomsListOpenedCasted"
 				:text-formatting="textFormattingCasted"
+				:formatting-toolbar-enabled="formattingToolbarEnabledCasted"
 				:link-options="linkOptionsCasted"
 				:is-mobile="isMobile"
 				:loading-rooms="loadingRoomsCasted"
@@ -192,6 +193,7 @@ export default {
 				disabled: false
 			})
 		},
+		formattingToolbarEnabled: { type: [Boolean, String], default: true },
 		linkOptions: {
 			type: [Object, String],
 			default: () => ({ disabled: false, target: '_blank', rel: null })
@@ -393,11 +395,17 @@ export default {
 				customActions: this.customActionsCasted
 			}
 		},
+		formattingToolbarEnabledCasted() {
+			return this.castBoolean(this.formattingToolbarEnabled)
+		},
 		linkOptionsCasted() {
 			return this.castObject(this.linkOptions)
 		},
 		usernameOptionsCasted() {
 			return this.castObject(this.usernameOptions)
+		},
+		multiUserCasted() {
+			return this.castBoolean(this.multiUser)
 		}
 	},
 

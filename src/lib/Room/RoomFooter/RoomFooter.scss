@@ -11,6 +11,59 @@
 	padding: 10px 8px 10px;
 }
 
+/* formatting toolbar shown when text is selected inside textarea */
+.vac-format-toolbar {
+	position: absolute;
+	top: auto; /* positioned dynamically */
+	right: auto; /* positioned dynamically */
+	display: flex;
+	gap: 6px;
+	background: var(--chat-footer-bg-color);
+	padding: 6px;
+	border-radius: 8px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+	z-index: 30;
+	pointer-events: auto;
+	max-width: calc(100% - 32px);
+	overflow: auto;
+	white-space: nowrap;
+	-webkit-overflow-scrolling: touch;
+}
+
+.vac-format-toolbar .vac-format-btn {
+	flex: 0 0 auto;
+	min-width: 34px;
+	height: 34px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@media only screen and (max-width: 768px) {
+	.vac-format-toolbar { max-width: 90%; gap: 4px; padding: 5px; }
+	.vac-format-toolbar .vac-format-btn { min-width: 30px; height: 30px; font-size: 12px }
+}
+
+.vac-format-btn {
+	background: transparent;
+	border: none;
+	color: var(--chat-color);
+	cursor: pointer;
+	padding: 6px 8px;
+	border-radius: 4px;
+	font-size: 13px;
+	line-height: 1;
+}
+
+.vac-format-btn:hover {
+	background: rgba(0, 0, 0, 0.04);
+}
+
+@media only screen and (max-width: 768px) {
+	.vac-format-toolbar { top: -40px; right: 8px; gap: 4px; }
+	.vac-format-btn { padding: 5px 6px; font-size: 12px; }
+}
+
 .vac-textarea {
 	max-height: 300px;
 	overflow-y: auto;

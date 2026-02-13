@@ -153,6 +153,7 @@
 			:templates-text="templatesText"
 			:custom-actions="customActions"
 			:text-formatting="textFormatting"
+			:formatting-toolbar-enabled="formattingToolbarEnabled"
 			:link-options="linkOptions"
 			:audio-bit-rate="audioBitRate"
 			:audio-sample-rate="audioSampleRate"
@@ -221,6 +222,7 @@ export default {
 		multipleFiles: { type: Boolean, default: true },
 		pasteFilesEnabled: { type: Boolean, default: true },
 		textFormatting: { type: Object, required: true },
+		formattingToolbarEnabled: { type: Boolean, default: true },
 		linkOptions: { type: Object, required: true },
 		loadingRooms: { type: Boolean, required: true },
 		roomInfoEnabled: { type: Boolean, required: true },
