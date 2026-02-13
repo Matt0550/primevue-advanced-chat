@@ -73,7 +73,7 @@
 				:custom-actions="customActionsCasted"
 				:username-options="usernameOptionsCasted"
 				:emoji-data-source="emojiDataSource"
-				:multi-user="multiUser"
+				:multi-user="multiUserCasted"
 
 				@toggle-rooms-list="toggleRoomsList"
 				@room-info="roomInfo"

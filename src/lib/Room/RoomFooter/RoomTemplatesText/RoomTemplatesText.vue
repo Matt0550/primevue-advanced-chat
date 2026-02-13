@@ -1,8 +1,8 @@
 <template>
 	<transition name="vac-slide-up">
 		<div
-			ref="container"
 			v-if="filteredTemplatesText.length"
+			ref="container"
 			class="vac-template-container vac-app-box-shadow"
 		>
 			<div

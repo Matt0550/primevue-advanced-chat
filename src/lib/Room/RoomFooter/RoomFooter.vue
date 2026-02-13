@@ -421,7 +421,7 @@ export default {
 		this.getTextareaRef().addEventListener('select', this.checkSelection)
 			this.getTextareaRef().addEventListener('touchend', this.checkSelection)
 			this.updateFooterLists()
-		
+
 		this.getTextareaRef().addEventListener('blur', () => {
 			setTimeout(() => {
 				this.resetFooterList()
@@ -497,7 +497,7 @@ export default {
 					left = Math.max(8, Math.min(left, footerRect.width - toolbarRect.width - 8))
 
 					// Always position above the footer
-					let top = - (toolbarRect.height + 8)
+					let top = -(toolbarRect.height + 8)
 
 					this.toolbarLeft = left
 					this.toolbarTop = top
@@ -611,7 +611,6 @@ export default {
 			} else if (this.filteredCustomActions.length) {
 				this.filteredCustomActions = []
 			} else this.resetMessage()
-		
 		},
 		onPasteImage(pasteEvent) {
 			const items = pasteEvent.clipboardData?.items
